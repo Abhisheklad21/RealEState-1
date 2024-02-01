@@ -24,5 +24,8 @@ public class User {
     private boolean isVerified;
     private String plan_serial_id;
 
+    @ManyToOne
+    @JoinColumn(name = "plan_id")
+    private Plan plan;
 
 }

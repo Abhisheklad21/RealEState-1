@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-
 @Service
 public class PlanServiceImpl {
     @Autowired
@@ -20,24 +19,30 @@ public class PlanServiceImpl {
     private UserRepository userRepo;
 
     public Plan createPlan(Plan plan) {
-        Plan save = planRepo.save(plan);
-        return save;
-
+        return planRepo.save(plan);
     }
 
     public HashMap<String, String> purchasePlan(String email, Long id) {
         HashMap<String, String> response = new HashMap<>();
         User user = userRepo.findByEmail(email);
+
         if (user != null && user.isVerified()) {
             Optional<Plan> plan = planRepo.findById(id);
-            user.setPlan_serial_id(plan.get().getSerialId());
-            User save = userRepo.save(user);
-            response.put("Status", "Successful");
-            response.put("Plan", plan.get().getPlanName());
 
+            if (plan.isPresent()) {
+                user.setPlan(plan.get());
+                userRepo.save(user);
+
+                response.put("Status", "Successful");
+                response.put("Plan", plan.get().getPlanName());
+            } else {
+                response.put("Status", "Plan not found");
+            }
         } else {
             response.put("Status", "Unsuccessful");
         }
+
         return response;
     }
 }
+

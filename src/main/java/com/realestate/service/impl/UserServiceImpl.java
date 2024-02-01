@@ -22,9 +22,9 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepo;
     @Autowired
     private EmailService emailService;
-    @Autowired
-    private HttpSession session;
-
+//    @Autowired
+//    private HttpSession session;
+    public static final Map<String, String> currentUser = new HashMap<>();
 
     @Override
     public UserDto createUser(UserDto userDto) {
@@ -50,10 +50,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public HashMap<String, String> loginUser(String email, String password) {
         User user = userRepo.findByEmailAndPassword(email, password);
+        System.out.println("login");
         HashMap<String, String> response = new HashMap<>();
         if (user != null) {
             response.put("Status", "Login Success !!");
-            session.setAttribute("userEmail", email);
+            currentUser.put("user", email);
+
         } else {
             response.put("Status", "Incorrect Email or Password !!!");
         }

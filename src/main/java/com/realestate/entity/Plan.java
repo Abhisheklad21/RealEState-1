@@ -16,13 +16,12 @@ import java.util.List;
 public class Plan {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private String id;
     private String planName;
     private long planValidity;
     private String type;
     private long price;
-    private String serialId;
 
-
+    @OneToMany(mappedBy = "plan")
+    private List<User> users = new ArrayList<>();
 }
